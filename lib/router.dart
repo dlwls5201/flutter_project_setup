@@ -1,35 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'main.dart';
+import 'main/main_naviagtion_screen.dart';
 
 final GoRouter myGoRouter = GoRouter(
-  initialLocation: "/",
+  initialLocation: "/home",
   routes: [
     GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const MyHomePage(title: 'Flutter Demo Home Page');
-      },
-    ),
-    GoRoute(
-      path: '/details',
-      builder: (BuildContext context, GoRouterState state) {
-        return Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            title: const Text("detail"),
-          ),
-          body: const Center(
-            child: Text(
-              "details",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        );
+      name: MainNavigationScreen.routeName,
+      path: "/:tab(home|write)",
+      builder: (context, state) {
+        final tab = state.pathParameters["tab"]!;
+        return MainNavigationScreen(tab: tab);
       },
     ),
   ],
