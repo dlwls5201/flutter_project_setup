@@ -46,7 +46,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
           Offstage(
             offstage: _selectedIndex != 1,
-            child: const WriteScreen(),
+            child: WriteScreen(),
           ),
         ],
       ),
