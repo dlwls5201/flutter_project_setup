@@ -26,6 +26,8 @@ class MyApp extends StatelessWidget {
       theme: FlexThemeData.light(
         scheme: FlexScheme.amber,
         bottomAppBarElevation: 0,
+        scaffoldBackground: Colors.orangeAccent,
+        surface: Colors.orangeAccent,
       ),
       darkTheme: FlexThemeData.dark(
         scheme: FlexScheme.amber,
