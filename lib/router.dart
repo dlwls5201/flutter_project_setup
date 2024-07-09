@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 
-import 'main/main_naviagtion_screen.dart';
+import 'features/main/main_naviagtion_screen.dart';
 
 final GoRouter myGoRouter = GoRouter(
   initialLocation: "/home",

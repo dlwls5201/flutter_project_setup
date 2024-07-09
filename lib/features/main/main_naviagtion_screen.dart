@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-import '../constants/sizes.dart';
-import '../features/home/HomeScreen.dart';
-import '../features/write/WriteScreen.dart';
+import '../../constants/sizes.dart';
+import '../home/HomeScreen.dart';
+import '../write/WriteScreen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   static const routeName = "mainNavigation";
@@ -42,7 +42,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         children: [
           Offstage(
             offstage: _selectedIndex != 0,
-            child: const HomeScreen(),
+            child: HomeScreen(),
           ),
           Offstage(
             offstage: _selectedIndex != 1,
