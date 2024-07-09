@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_setup/features/widgets/mood_button_widgets.dart';
 
 import '../../constants/gaps.dart';
 import '../../constants/sizes.dart';
@@ -137,34 +138,9 @@ class _WriteScreenState extends State<WriteScreen> {
                   Gaps.v32,
                   Align(
                     alignment: Alignment.center,
-                    child: GestureDetector(
+                    child: MoodButtonWidget(
+                      buttonText: "POST",
                       onTap: _onPost,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          border: Border.all(
-                            color: isDarkMode(context) ? Colors.white : Colors.black,
-                            width: Sizes.size2,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            Sizes.size8,
-                          ),
-                        ),
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Sizes.size48,
-                            vertical: Sizes.size8,
-                          ),
-                          child: Text(
-                            "POST",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.size16,
-                            ),
-                          ),
-                        ),
-                      ),
                     ),
                   )
                 ],
