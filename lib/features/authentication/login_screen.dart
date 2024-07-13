@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:project_setup/features/authentication/signup_screen.dart';
+import 'package:project_setup/features/authentication/view_models/login_view_model.dart';
 import 'package:project_setup/features/widgets/mood_button_widgets.dart';
 
 import '../../constants/gaps.dart';
 import '../../constants/sizes.dart';
 import '../../utils.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static String routeName = "login";
   static String routeURL = "/login";
 
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class LoginScreenState extends ConsumerState<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _onEnterTap() {}
+  void _onEnterTap() {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    ref.read(loginViewModel.notifier).signIn(context, email, password);
+  }
 
   void _onCreateAccountTap() {
     context.pushNamed(SignUpScreen.routeName);

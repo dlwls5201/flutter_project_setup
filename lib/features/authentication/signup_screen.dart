@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:project_setup/features/authentication/view_models/signup_view_model.dart';
 
 import '../../constants/gaps.dart';
 import '../../constants/sizes.dart';
 import '../../utils.dart';
 import '../widgets/mood_button_widgets.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   static String routeName = "signUp";
   static String routeURL = "/signUp";
 
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  SignUpScreenState createState() => SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _onCreateAccountTap() {}
+  void _onCreateAccountTap() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    ref.read(signUpViewModel.notifier).signUp(context, email, password);
+  }
 
   void _onLoginInTap() {
     context.pop();
