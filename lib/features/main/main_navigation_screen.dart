@@ -37,12 +37,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // write 에서 업로드 후 home 화면으로 이동시 필요
+    _selectedIndex = _tabs.indexOf(widget.tab);
     return Scaffold(
       body: Stack(
         children: [
           Offstage(
             offstage: _selectedIndex != 0,
-            child: HomeScreen(),
+            child: const HomeScreen(),
           ),
           Offstage(
             offstage: _selectedIndex != 1,

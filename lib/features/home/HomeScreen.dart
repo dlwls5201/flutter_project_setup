@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:project_setup/features/authentication/view_models/login_view_model.dart';
+import 'package:project_setup/features/home/view_models/mood_view_mode.dart';
 import 'package:project_setup/features/home/widgets/mood_widgets.dart';
 
 import '../../constants/gaps.dart';
 import '../../constants/sizes.dart';
-import '../../data/model/mood_model.dart';
 
-class HomeScreen extends ConsumerWidget {
-  HomeScreen({super.key});
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key});
 
-  final items = [
-    MoodModel(
-      icon: "🤔",
-      contents: "hello my name is peter",
-      createdAtMillisecond: 1720508425776,
-    ),
-    MoodModel(
-      icon: "😤",
-      contents: "my feeling is not good",
-      createdAtMillisecond: 1720508425776,
-    ),
-    MoodModel(
-      icon: "😡",
-      contents: "I am angry",
-      createdAtMillisecond: 1720508425776,
-    ),
-    MoodModel(
-      icon: "🤗",
-      contents: "Today is so nice",
-      createdAtMillisecond: 1720508425776,
-    )
-  ];
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
+class HomeScreenState extends ConsumerState<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // initState에서는 Provider 상태를 직접 수정하지 않습니다.
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _initializeAsync();
+    });
+  }
+
+  Future<void> _initializeAsync() async {
+    if (mounted) {
+      await ref.read(moodViewModel.notifier).fetchMoods();
+    }
+  }
 
   void _onLogoutLongPress(BuildContext context, WidgetRef ref) async {
     showDialog(
@@ -56,7 +54,7 @@ class HomeScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -74,13 +72,26 @@ class HomeScreen extends ConsumerWidget {
             ),
             Gaps.v48,
             Expanded(
-              child: ListView.builder(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final model = items[index];
-                  return ModeWidget(model: model);
-                },
-              ),
+              child: ref.watch(moodViewModel).when(
+                    data: (moods) {
+                      return ListView.builder(
+                        itemCount: moods.length,
+                        itemBuilder: (context, index) {
+                          final model = moods[index];
+                          return ModeWidget(model: model);
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) => Center(
+                      child: Text(
+                        'Could not load moods: $error',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
             ),
           ],
         ),

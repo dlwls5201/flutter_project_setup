@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:project_setup/data/model/mood_model.dart';
+import 'package:project_setup/features/authentication/repos/authentication_repo.dart';
+import 'package:project_setup/features/home/repo/mood_repo.dart';
+import 'package:project_setup/features/home/view_models/mood_view_mode.dart';
 import 'package:project_setup/features/widgets/mood_button_widgets.dart';
 
 import '../../constants/gaps.dart';
 import '../../constants/sizes.dart';
 import '../../utils.dart';
 
-class WriteScreen extends StatefulWidget {
+class WriteScreen extends ConsumerStatefulWidget {
   WriteScreen({super.key});
 
   @override
-  State<WriteScreen> createState() => _WriteScreenState();
+  WriteScreenState createState() => WriteScreenState();
 }
 
-class _WriteScreenState extends State<WriteScreen> {
+class WriteScreenState extends ConsumerState<WriteScreen> {
   final TextEditingController _contentController = TextEditingController();
 
   final moods = [
@@ -34,8 +40,20 @@ class _WriteScreenState extends State<WriteScreen> {
     super.dispose();
   }
 
-  void _onPost() {
+  void _onPost() async {
     final contents = _contentController.text;
+    final userId = ref.read(authRepo).user!.uid;
+    await ref.read(moodRepo).saveMood(
+          MoodModel(
+            icon: _selectedMood,
+            contents: contents,
+            creatorUid: userId,
+            createdAtMillisecond: DateTime.now().millisecondsSinceEpoch,
+          ),
+        );
+
+    await ref.read(moodViewModel.notifier).fetchMoods();
+    context.go("/home");
   }
 
   @override
@@ -60,12 +78,26 @@ class _WriteScreenState extends State<WriteScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "How do you feel?",
-                    style: TextStyle(
-                      fontSize: Sizes.size16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      const Text(
+                        "How do you feel?",
+                        style: TextStyle(
+                          fontSize: Sizes.size16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Gaps.h12,
+                      ref.watch(moodViewModel).when(
+                            data: (data) => Container(),
+                            error: (error, stackTrace) => Text("$error"),
+                            loading: () => const SizedBox(
+                              width: Sizes.size16,
+                              height: Sizes.size16,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                    ],
                   ),
                   Gaps.v12,
                   TextField(
